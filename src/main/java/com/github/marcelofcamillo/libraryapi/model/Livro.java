@@ -2,6 +2,8 @@ package com.github.marcelofcamillo.libraryapi.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "livro", schema = "public")
-@Data // gera os getters e setters automáticamente
+@Data // gera os getters e setters automaticamente
 public class Livro {
     @Id
     @Column(name = "id")
@@ -31,7 +33,6 @@ public class Livro {
 
     @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco;
-    //private BigDecimal preco;
 
     @ManyToOne // muitos livros para um autor
     @JoinColumn(name = "id_autor")
