@@ -34,7 +34,7 @@ public class Livro {
     @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco;
 
-    @ManyToOne // muitos livros para um autor
+    @ManyToOne//(cascade = CascadeType.ALL) // muitos livros para um autor
     @JoinColumn(name = "id_autor")
     private Autor autor;
 }
