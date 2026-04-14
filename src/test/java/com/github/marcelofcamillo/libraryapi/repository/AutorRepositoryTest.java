@@ -1,11 +1,15 @@
 package com.github.marcelofcamillo.libraryapi.repository;
 
 import com.github.marcelofcamillo.libraryapi.model.Autor;
+import com.github.marcelofcamillo.libraryapi.model.GeneroLivro;
+import com.github.marcelofcamillo.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,7 +17,10 @@ import java.util.UUID;
 @SpringBootTest
 public class AutorRepositoryTest {
     @Autowired
-    AutorRepository repository;
+    AutorRepository autorRepository;
+
+    @Autowired
+    LivroRepository livroRepository;
 
     @Test
     public void salvarTest() {
@@ -22,14 +29,14 @@ public class AutorRepositoryTest {
         autor.setNacionalidade("Brasileira");
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
 
-        var autorSalvo = repository.save(autor);
+        var autorSalvo = autorRepository.save(autor);
         System.out.println("Autor salvo: " + autorSalvo);
     }
 
     @Test
     public void atualizarTest() {
         var id = UUID.fromString("2210bfb9-3570-41cf-b21a-5f982a03f6c0");
-        Optional<Autor> possivelAutor = repository.findById(id);
+        Optional<Autor> possivelAutor = autorRepository.findById(id);
 
         if (possivelAutor.isPresent()) {
             Autor autorEncontrado = possivelAutor.get();
@@ -41,31 +48,62 @@ public class AutorRepositoryTest {
             autorEncontrado.setDataNascimento(LocalDate.of(1960, 1, 30));
             autorEncontrado.setNacionalidade("Espanhol");
 
-            repository.save(autorEncontrado);
+            autorRepository.save(autorEncontrado);
         }
     }
 
     @Test
     public void listarTest() {
-        List<Autor> lista = repository.findAll();
+        List<Autor> lista = autorRepository.findAll();
         lista.forEach(System.out::println);
     }
 
     @Test
     public void CountTest() {
-        System.out.println("Contagem de autores: " + repository.count());
+        System.out.println("Contagem de autores: " + autorRepository.count());
     }
 
     @Test
     public void deletePorIdTest() {
         var id = UUID.fromString("bab93d91-9b7b-4ce0-a5fd-5f81ea8a11af");
-        repository.deleteById(id);
+        autorRepository.deleteById(id);
     }
 
     @Test
     public void deleteTest() {
         var id = UUID.fromString("9504bba3-d72d-4c37-ba31-290d6e1c980d");
-        var jose = repository.findById(id).get();
-        repository.delete(jose);
+        var jose = autorRepository.findById(id).get();
+        autorRepository.delete(jose);
+    }
+
+    @Test
+    public void salvarAutorComLivrosTest() {
+        Autor autor = new Autor();
+        autor.setNome("Antonio");
+        autor.setNacionalidade("Americano");
+        autor.setDataNascimento(LocalDate.of(1970,8,5));
+
+        Livro livro1 = new Livro();
+        livro1.setIsbn("20847-84874");
+        livro1.setPreco(BigDecimal.valueOf(204));
+        livro1.setGenero(GeneroLivro.MISTERIO);
+        livro1.setTitulo("O roubo da casa assombrada.");
+        livro1.setDataPublicacao(LocalDate.of(1999,1,2));
+        livro1.setAutor(autor);
+
+        Livro livro2 = new Livro();
+        livro2.setIsbn("99599-56288");
+        livro2.setPreco(BigDecimal.valueOf(143));
+        livro2.setGenero(GeneroLivro.BIOGRAFIA);
+        livro2.setTitulo("O Diário de Ana.");
+        livro2.setDataPublicacao(LocalDate.of(2005,9,7));
+        livro2.setAutor(autor);
+
+        autor.setLivros(new ArrayList<>());
+        autor.getLivros().add(livro1);
+        autor.getLivros().add(livro2);
+
+        autorRepository.save(autor);
+        //livroRepository.saveAll(autor.getLivros());
     }
 }
