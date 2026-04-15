@@ -26,15 +26,15 @@ class LivroRepositoryTest {
         Livro livro = new Livro();
         livro.setIsbn("90887-84874");
         livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("Outro Livro");
+        livro.setGenero(GeneroLivro.CIENCIA);
+        livro.setTitulo("Ciências");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
         Autor autor = autorRepository
                 .findById(UUID.fromString("0682af1a-532d-4917-a1c0-638ae77d99d2"))
                 .orElse(null);
 
-        livro.setAutor(autor);
+        //livro.setAutor(autor);
 
         livroRepository.save(livro);
     }
@@ -44,8 +44,8 @@ class LivroRepositoryTest {
         Livro livro = new Livro();
         livro.setIsbn("90887-84874");
         livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("Outro Livro");
+        livro.setGenero(GeneroLivro.CIENCIA);
+        livro.setTitulo("Ciências");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
         Autor autor = new Autor();
@@ -53,7 +53,7 @@ class LivroRepositoryTest {
         autor.setNacionalidade("Francês");
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
 
-        livro.setAutor(autor);
+        //livro.setAutor(autor);
         livroRepository.save(livro);
     }
 
@@ -181,5 +181,15 @@ class LivroRepositoryTest {
     void listarPorGeneroPositionalParameters() {
         var resultado = livroRepository.findByGeneroPositionalParameters(GeneroLivro.FICCAO, "dataPublicacao");
         resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void deletePorGeneroTest() {
+        livroRepository.deleteByGenero(GeneroLivro.CIENCIA);
+    }
+
+    @Test
+    void updateDataPublicacaoTest() {
+        livroRepository.updateDataPublicacao(LocalDate.of(2000,1,1));
     }
 }
