@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -76,7 +77,7 @@ class LivroRepositoryTest {
     }
 
     @Test
-    void atualizarAutorDoLivro(){
+    void atualizarAutorDoLivro() {
         UUID idLivro = UUID.fromString("5a72dcdc-4a5f-4ccc-9e56-c5741de6a029");
         var livroParaAtualizar = livroRepository.findById(idLivro).orElse(null);
 
@@ -88,24 +89,52 @@ class LivroRepositoryTest {
     }
 
     @Test
-    void deletarTest(){
+    void deletarTest() {
         UUID id = UUID.fromString("9fc05663-bad2-46f5-9916-259489150cb9");
         livroRepository.deleteById(id);
     }
 
     @Test
-    void deletarCascadeTest(){
+    void deletarCascadeTest() {
         UUID id = UUID.fromString("6089e630-01c1-47f3-9d1b-33621c4053b6");
         livroRepository.deleteById(id);
     }
 
     @Test
     @Transactional
-    void buscarLivroTest(){
+    void buscarLivroTest() {
         UUID id = UUID.fromString("e942faef-2fca-41ec-9c23-219cbb9681a1");
         Livro livro = livroRepository.findById(id).orElse(null);
 
         System.out.println("Livro: " + livro.getTitulo());
         System.out.println("Autor: " + livro.getAutor().getNome());
+    }
+
+    @Test
+    void pesquisaPorTituloTest() {
+        List<Livro> lista = livroRepository.findByTitulo("O Diário de Ana.");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorIsbn() {
+        List<Livro> lista = livroRepository.findByIsbn("20847-84874");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorTituloEPreco() {
+        var preco = BigDecimal.valueOf(204);
+        var titulo = "O roubo da casa assombrada.";
+        List<Livro> lista = livroRepository.findByTituloAndPreco(titulo, preco);
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorTituloOuIsbn() {
+        var isbn = "20847-84874";
+        var titulo = "O Diário de Ana.";
+        List<Livro> lista = livroRepository.findByTituloOrIsbn(titulo, isbn);
+        lista.forEach(System.out::println);
     }
 }
