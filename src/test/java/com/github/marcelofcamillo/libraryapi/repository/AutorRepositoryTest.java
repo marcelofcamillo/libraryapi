@@ -6,6 +6,7 @@ import com.github.marcelofcamillo.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -81,14 +82,14 @@ public class AutorRepositoryTest {
         Autor autor = new Autor();
         autor.setNome("Antonio");
         autor.setNacionalidade("Americano");
-        autor.setDataNascimento(LocalDate.of(1970,8,5));
+        autor.setDataNascimento(LocalDate.of(1970, 8, 5));
 
         Livro livro1 = new Livro();
         livro1.setIsbn("20847-84874");
         livro1.setPreco(BigDecimal.valueOf(204));
         livro1.setGenero(GeneroLivro.MISTERIO);
         livro1.setTitulo("O roubo da casa assombrada.");
-        livro1.setDataPublicacao(LocalDate.of(1999,1,2));
+        livro1.setDataPublicacao(LocalDate.of(1999, 1, 2));
         livro1.setAutor(autor);
 
         Livro livro2 = new Livro();
@@ -96,7 +97,7 @@ public class AutorRepositoryTest {
         livro2.setPreco(BigDecimal.valueOf(143));
         livro2.setGenero(GeneroLivro.BIOGRAFIA);
         livro2.setTitulo("O Diário de Ana.");
-        livro2.setDataPublicacao(LocalDate.of(2005,9,7));
+        livro2.setDataPublicacao(LocalDate.of(2005, 9, 7));
         livro2.setAutor(autor);
 
         autor.setLivros(new ArrayList<>());
@@ -105,5 +106,17 @@ public class AutorRepositoryTest {
 
         autorRepository.save(autor);
         //livroRepository.saveAll(autor.getLivros());
+    }
+
+    @Test
+    void listarLivrosAutor() {
+        var id = UUID.fromString("38602241-d428-4b1e-abe1-95d1df7fe24d");
+        var autor = autorRepository.findById(id).get();
+
+        // busca os livros do autor
+        List<Livro> livrosLista = livroRepository.findByAutor(autor);
+        autor.setLivros(livrosLista);
+
+        autor.getLivros().forEach(System.out::println);
     }
 }
