@@ -169,4 +169,17 @@ class LivroRepositoryTest {
         var resultado = livroRepository.listarGenerosAutoresBrasileiros();
         resultado.forEach(System.out::println);
     }
+
+    @Test
+    void listarPorGeneroQueryParam() {
+        var resultado = livroRepository.findByGenero(GeneroLivro.FICCAO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+
+    // positional parameters
+    @Test
+    void listarPorGeneroPositionalParameters() {
+        var resultado = livroRepository.findByGeneroPositionalParameters(GeneroLivro.FICCAO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
 }
